@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card" style="max-width: 450px; margin: 60px auto;">
+    <h2>Đăng Nhập Hệ Thống</h2>
+    <form method="POST">
+        <label>Email Người Dùng(@gmail.com)</label>
+        <input type="email" name="email" pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$" title="Vui lòng nhập đúng địa chỉ Gmail của bạn" required>
+        <label>Mật Khẩu</label>
+        <input type="password" name="password" required>
+        <button type="submit" class="btn">Vào Lớp Học</button>
+    </form>
+    <p style="margin-top: 16px;">Chưa có tài khoản? <a href="{{ url_for('auth.register') }}" style="color: var(--primary);">Đăng ký ngay</a></p>
+</div>
+{% endblock %}

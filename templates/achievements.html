@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Trung Tâm Thành Tích cá nhân</h2>
+<div class="grid">
+    <div class="card" style="text-align: center;">
+        <h3>Chuỗi Học Tập Liên Tục (Streak)</h3>
+        <div class="badge-cup fire-{{ fire_color }}">🔥</div>
+        <p>Chuỗi hiện tại của bạn: <strong>{{ current_user.streak }} ngày liên tiếp</strong></p>
+        <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">(Chuỗi càng lớn, ngọn lửa của bạn sẽ đổi màu nâng cấp dần giống hệ thống của Tiktok!)</p>
+    </div>
+
+    <div class="card" style="text-align: center;">
+        <h3>Huy Hiệu Vinh Danh Học Tập</h3>
+        {% if has_cup %}
+            <div class="badge-cup" style="color: #ffd700;">🏆</div>
+            <p><strong>Cúp Chăm Chỉ Nâng Cao</strong></p>
+            <p style="font-size: 12px; color: var(--text-muted);">Đã xuất sắc hoàn thành trên 20 bài tập lớp học.</p>
+        {% else %}
+            <div class="badge-cup" style="color: var(--border);">🔒</div>
+            <p style="color: var(--text-muted);">Làm đủ 20 bài tập để mở khóa Cup vàng danh giá.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

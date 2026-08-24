@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Góc Học Tập - Bài Tập Của Lớp</h2>
+
+{% if current_user.role in ['teacher', 'admin'] %}
+<div class="card">
+    <h3>Phát Hành Bài Tập Mới (Quyền Giáo viên)</h3>
+    <form method="POST">
+        <label>Tiêu đề bài tập</label>
+        <input type="text" name="title" required>
+        <label>Yêu cầu chi tiết</label>
+        <textarea name="description" required></textarea>
+        <label>Hạn nộp bài</label>
+        <input type="date" name="due_date" required>
+        <button type="submit" class="btn">Đăng Bài Tập</button>
+    </form>
+</div>
+{% endif %}
+
+{% for assign in assigns %}
+<div class="card">
+    <h3>{{ assign.title }}</h3>
+    <p style="color: var(--warning); font-size: 14px; margin: 6px 0;">Hạn chót: {{ assign.due_date.strftime('%d/%m/%Y') }}</p>
+
+    <div style="margin-top: 12px; display: flex; gap: 12px;">
+        <a href="{{ url_for('learning.assignment_detail', assign_id=assign.id) }}" class="btn" style="background: var(--surface); border: 1px solid var(--border); color: var(--text-main);">Xem chi tiết & Nộp bài</a>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

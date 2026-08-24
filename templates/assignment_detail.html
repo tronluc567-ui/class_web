@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+    <h2>{{ assign.title }}</h2>
+    <p style="color: var(--warning); margin: 8px 0;">Hạn chót nộp bài: {{ assign.due_date.strftime('%d/%m/%Y') }}</p>
+    <div style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); margin: 16px 0;">
+        <p>{{ assign.description }}</p>
+    </div>
+
+    <!-- KHU VỰC DÀNH CHO HỌC SINH NỘP BÀI -->
+    {% if current_user.role == 'student' %}
+        {% set user_sub = namespace(data=None) %}
+        {% for s in assign.submissions %}
+            {% if s.user_id == current_user.id %}{% set user_sub.data = s %}{% endif %}
+        {% endfor %}
+
+        {% if user_sub.data %}
+            <div style="border: 1px solid var(--success); padding: 16px; border-radius: var(--radius-sm);">
+                <h4 style="color: var(--success);">✓ Bạn đã hoàn thành nộp bài tập này!</h4>
+                <p style="margin-top: 8px;">Trạng thái chấm: <strong>{{ user_sub.data.status }}</strong></p>
+                {% if user_sub.data.status == 'Graded' %}
+                    <p>Điểm số: <strong style="color: var(--warning); font-size: 20px;">{{ user_sub.data.grade }} / 10</strong></p>
+                    <p>Nhận xét của thầy cô: <em>{{ user_sub.data.feedback }}</em></p>
+                {% endif %}
+            </div>
+        {% else %}
+            <h3>Nộp bài giải của bạn</h3>
+            <form action="{{ url_for('learning.submit_assignment', assign_id=assign.id) }}" method="POST" enctype="multipart/form-data" style="margin-top: 12px;">
+                <label>Ghi chú / Câu trả lời văn bản (Tùy chọn)</label>
+                <textarea name="content" placeholder="Nhập câu trả lời trực tiếp tại đây..."></textarea>
+                <label>Đính kèm file bài làm (PDF, Word, Zip, Ảnh...)</label>
+                <input type="file" name="sub_file">
+                <button type="submit" class="btn">Xác Nhận Nộp Bài Nhận 50 EXP</button>
+            </form>
+        {% endif %}
+    {% endif %}
+</div>
+
+<!-- KHU VỰC DÀNH CHO GIÁO VIÊN XEM DANH SÁCH VÀ CHẤM ĐIỂM -->
+{% if current_user.role in ['teacher', 'admin'] %}
+<div class="card">
+    <h3>Danh Sách Học Sinh Đã Nộp Bài</h3>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 12px; text-align: left;">
+        <thead>
+            <tr style="border-bottom: 2px solid var(--border); color: var(--text-muted);">
+                <th style="padding: 12px;">Tên Học Sinh</th>
+                <th>Ngày Nộp</th>
+                <th>File Đính Kèm</th>
+                <th>Trạng Thái / Điểm Số</th>
+                <th>Hành Động Chấm Điểm</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in subs %}
+            <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 12px; font-weight: bold;">{{ s.student.username }}</td>
+                <td>{{ s.date_submitted.strftime('%H:%M - %d/%m/%Y') }}</td>
+                <td>
+                    {% if s.filename %}
+                        <a href="{{ url_for('static', filename='uploads/' + s.filename) }}" download style="color: var(--primary);">Tải File Bài Làm</a>
+                    {% else %}
+                        <span style="color: var(--text-muted);">Chỉ nộp văn bản</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if s.status == 'Graded' %}
+                        <span style="color: var(--success); font-weight: bold;">★ {{ s.grade }} Điểm</span>
+                    {% else %}
+                        <span style="color: var(--danger);">Chưa chấm điểm</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <form action="{{ url_for('learning.grade_submission', sub_id=s.id) }}" method="POST" style="display: flex; gap: 8px; margin-bottom: 0; padding: 6px 0;">
+                        <input type="number" step="0.1" name="grade" min="0" max="10" placeholder="Điểm" style="width: 80px; margin-bottom:0; padding: 4px;" required>
+                        <input type="text" name="feedback" placeholder="Nhận xét..." style="margin-bottom:0; padding: 4px;" required>
+                        <button type="submit" class="btn" style="padding: 4px 12px; font-size: 13px;">Lưu</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+                <tr><td colspan="5" style="padding: 16px; text-align: center; color: var(--text-muted);">Chưa có học sinh nào nộp bài tập này.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

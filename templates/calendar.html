@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Lịch Hoạt Động & Sự Kiện Kiểm Tra</h2>
+
+{% if current_user.role == 'admin' or current_user.role == 'teacher'%}
+<div class="card">
+    <h3>Thông Báo Sự Kiện Mới (Quyền Admin)</h3>
+    <form method="POST">
+        <label>Nội dung thông báo</label>
+        <input type="text" name="title" required>
+        <label>Ngày diễn ra</label>
+        <input type="date" name="event_date" required>
+        <label>Loại sự kiện</label>
+        <select name="type">
+            <option value="exam">Ngày kiểm tra bài tập</option>
+            <option value="activity">Hoạt động ngoại khóa / Họp lớp</option>
+        </select>
+        <button type="submit" class="btn">Thêm Lên Lịch Lớp</button>
+    </form>
+</div>
+{% endif %}
+
+<div class="card">
+    <h3>Danh sách sự kiện sắp tới</h3>
+    {% for ev in events %}
+        <div style="padding: 12px; border-left: 4px solid {% if ev.type == 'exam' %}var(--danger){% else %}var(--primary){% endif %}; background: var(--bg); margin-top: 12px; border-radius: var(--radius-sm);">
+            <strong>{{ ev.title }}</strong>
+            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Ngày hoạt động: {{ ev.event_date }} | Nhóm: {{ ev.type|upper }}</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

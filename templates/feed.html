@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Bảng Tin Thảo Luận Lớp Học</h2>
+<div class="card">
+    <form method="POST" enctype="multipart/form-data">
+        <textarea name="content" placeholder="Chia sẻ câu chuyện hoặc hình ảnh bài học hôm nay..." required></textarea>
+        <label>Đính kèm hình ảnh minh họa (Hệ thống tự động lọc đuôi file độc hại)</label>
+        <input type="file" name="image" accept="image/*">
+        <button type="submit" class="btn">Đăng Bài Viết</button>
+    </form>
+</div>
+
+{% for post in posts_pagination.items %}
+<div class="card">
+    <h4>{{ post.author.username }} <span style="font-size: 12px; color: var(--text-muted);">• {{ post.date_posted.strftime('%H:%M - %d/%m/%Y') }}</span></h4>
+    <p style="margin: 12px 0;">{{ post.content }}</p>
+    {% if post.image_file %}
+        <img src="{{ url_for('static', filename='uploads/' + post.image_file) }}" style="max-width: 100%; border-radius: var(--radius-sm); margin-bottom: 12px;">
+    {% endif %}
+
+    <!-- KHẮC PHỤC TRIỆT ĐỂ LỖI RELOAD TRANG THEO YÊU CẦU BẰNG FETCH API -->
+    <div style="display: flex; gap: 16px; margin-bottom: 12px;">
+        <button onclick="interactPost('like', {{ post.id }})" class="btn" style="background: transparent; color: var(--primary); padding: 0;">
+            👍 Thích (<span id="like-count-{{ post.id }}">{{ post.liked_by|length }}</span>)
+        </button>
+        <button onclick="interactPost('heart', {{ post.id }})" class="btn" style="background: transparent; color: var(--danger); padding: 0;">
+            ❤️ Yêu thích (<span id="heart-count-{{ post.id }}">{{ post.hearted_by|length }}</span>)
+        </button>
+    </div>
+
+    <div style="background: var(--bg); padding: 12px; border-radius: var(--radius-sm);">
+        {% for comment in post.comments %}
+            <p style="font-size: 14px; margin-bottom: 6px;"><strong>{{ comment.author.username }}:</strong> {{ comment.content }}</p>
+        {% endfor %}
+        <form method="POST" action="{{ url_for('main.add_comment', post_id=post.id) }}" style="display: flex; gap: 8px; margin-top: 8px;">
+            <input type="text" name="content" placeholder="Viết bình luận..." style="margin-bottom: 0;" required>
+            <button type="submit" class="btn" style="padding: 0 16px;">Gửi</button>
+        </form>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Cụm phân trang giao diện đẹp mắt -->
+<div class="pagination-container">
+    {% for page_num in posts_pagination.iter_pages() %}
+        {% if page_num %}
+            <a href="{{ url_for('main.feed', page=page_num) }}" class="btn" style="{% if page_num == posts_pagination.page %}background: var(--warning);{% endif %} padding: 6px 12px;">{{ page_num }}</a>
+        {% else %}
+            <span style="color: var(--text-muted);">...</span>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<script>
+function interactPost(type, postId) {
+    fetch(`/post/${postId}/${type}`)
+        .then(response => response.json())
+        .then(data => {
+            if (type === 'like') {
+                document.getElementById(`like-count-${postId}`).innerText = data.like_count;
+            } else if (type === 'heart') {
+                document.getElementById(`heart-count-${postId}`).innerText = data.heart_count;
+            }
+        }).catch(err => console.error('Lỗi kết nối mạng:', err));
+}
+</script>
+{% endblock %}

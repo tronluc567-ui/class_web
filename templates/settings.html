@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Cài Đặt Cấu Hình Hệ Thống</h2>
+<div class="card" style="max-width: 500px;">
+    <form method="POST">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+                <strong>Chế độ tối (Dark Theme UI)</strong>
+                <p style="font-size: 12px; color: var(--text-muted);">Chuyển đổi giao diện sang chế độ bảo vệ mắt ban đêm.</p>
+            </div>
+            <input type="checkbox" name="dark_mode" value="true" style="width: auto; margin-bottom: 0;" {% if current_user.dark_mode %}checked{% endif %}>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+                <strong>Tắt thông báo lớp học (Mute Notifications)</strong>
+                <p style="font-size: 12px; color: var(--text-muted);">Ngừng nhận các thông báo nhắc nhở nộp bài từ giáo viên.</p>
+            </div>
+            <input type="checkbox" name="mute_notif" value="true" style="width: auto; margin-bottom: 0;" {% if current_user.mute_notif %}checked{% endif %}>
+        </div>
+
+        <button type="submit" class="btn">Lưu Toàn Bộ Cấu Hình</button>
+    </form>
+</div>
+{% endblock %}

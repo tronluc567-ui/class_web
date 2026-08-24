@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+    <a href="{{ url_for('learning.discuss') }}" style="color: var(--primary); text-decoration: none;"><i class="fa-solid fa-arrow-left"></i> Quay lại diễn đàn</a>
+    <h2 style="margin-top: 16px;">{{ disc.topic }}</h2>
+    <p style="font-size: 13px; color: var(--text-muted); margin: 6px 0;">Chủ thớt: <strong>{{ disc.creator.username }}</strong> • Đăng lúc: {{ disc.date_created.strftime('%d/%m/%Y') }}</p>
+    <div style="background: var(--bg); padding: 16px; border-radius: var(--radius-sm); margin-top: 12px;">
+        <p>{{ disc.content }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Các ý kiến thảo luận ({{ disc.comments|length }})</h3>
+    <div style="margin: 16px 0;">
+        {% for c in disc.comments %}
+            <div style="background: var(--bg); padding: 12px; border-radius: var(--radius-sm); margin-bottom: 12px; border-left: 3px solid var(--primary);">
+                <p style="font-size: 13px; color: var(--text-muted); font-weight: bold;">{{ c.author.username }} <span style="font-weight: normal;">• {{ c.date_posted.strftime('%H:%M - %d/%m/%Y') }}</span></p>
+                <p style="margin-top: 6px; font-size: 15px;">{{ c.content }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <form method="POST">
+        <label>Để lại ý kiến đóng góp của bạn</label>
+        <textarea name="content" placeholder="Nhập nội dung phản hồi tại đây..." required></textarea>
+        <button type="submit" class="btn">Gửi Phản Hồi Con</button>
+    </form>
+</div>
+{% endblock %}
+

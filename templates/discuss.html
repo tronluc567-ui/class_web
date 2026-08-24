@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Diễn Đàn Thảo Luận Lớp Học</h2>
+<div class="card">
+    <h3>Khởi Tạo Chủ Đề Mới</h3>
+    <form method="POST">
+        <label>Chủ đề thảo luận</label>
+        <input type="text" name="topic" required>
+        <label>Nội dung chi tiết</label>
+        <textarea name="content" required></textarea>
+        <button type="submit" class="btn">Đăng Lên Diễn Đàn</button>
+    </form>
+</div>
+
+{% for d in discussions %}
+<div class="card">
+    <h4>{{ d.topic }}</h4>
+    <p style="font-size: 13px; color: var(--text-muted); margin: 4px 0;">Người đăng: {{ d.creator.username }} • Thảo luận: ({{ d.comments|length }} câu trả lời)</p>
+    <p style="margin: 12px 0;">{{ d.content|truncate(150) }}</p>
+    <a href="{{ url_for('learning.discuss_detail', disc_id=d.id) }}" class="btn" style="background: var(--primary-soft); color: var(--primary);">Tham gia thảo luận con</a>
+</div>
+{% endfor %}
+{% endblock %}

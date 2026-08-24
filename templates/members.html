@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Bảng Xếp Hạng Thành Viên Lớp Học</h2>
+<div class="card">
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr style="border-bottom: 2px solid var(--border); color: var(--text-muted);">
+                <th style="padding: 12px;">Thành viên</th>
+                <th>Vai trò</th>
+                <th>Cấp độ</th>
+                <th>Tổng số EXP</th>
+                <th>Chuỗi Streak</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 12px; font-weight: bold;">{{ user.username }}</td>
+                <td><span style="background: var(--primary-soft); color: var(--primary); padding: 4px 8px; border-radius: 4px; font-size: 12px;">{{ user.role }}</span></td>
+                <td>Cấp {{ user.level }}</td>
+                <td style="color: var(--success); font-weight: bold;">{{ user.exp }} EXP</td>
+                <td>🔥 {{ user.streak }} ngày</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

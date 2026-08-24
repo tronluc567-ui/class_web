@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Kho Tài Liệu Lớp Học</h2>
+<div class="card">
+    <h3>Tải tài liệu lên hệ thống</h3>
+    <form method="POST" enctype="multipart/form-data">
+        <label>Tên tài liệu</label>
+        <input type="text" name="title" required>
+        <label>Chọn tệp tin đính kèm</label>
+        <input type="file" name="doc_file" required>
+        <button type="submit" class="btn">Tải Lên Tài Liệu</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Tài liệu đã chia sẻ</h3>
+    <ul style="list-style: none; margin-top: 12px;">
+        {% for doc in docs %}
+            <li style="padding: 12px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>{{ doc.title }}</strong>
+                    <p style="font-size: 12px; color: var(--text-muted);">Người đăng: {{ doc.uploader }}</p>
+                </div>
+                <a href="{{ url_for('static', filename='uploads/' + doc.filename) }}" class="btn" style="padding: 6px 12px;" download>Tải Xuống</a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

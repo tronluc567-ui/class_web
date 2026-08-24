@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Lớp Học Trực Tuyến</title>
+
+    <!-- KHẮC PHỤC LỖI HỎNG CDN FONT-AWESOME CỦA GIẢNG VIÊN -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+
+    <style>
+        /* KHẮC PHỤC LỖI TÁCH CSS PHÂN MẢNH VÀ LỖI CÚ PHÁP DÒNG 1 */
+        :root {
+            --bg: #0f1015; --surface: #171923; --border: #2d3142;
+            --primary: #5865f2; --primary-soft: rgba(88, 101, 242, 0.15);
+            --text-main: #f7fafc; --text-muted: #a0aec0;
+            --danger: #e53e3e; --warning: #dd6b20; --success: #38a169;
+            --radius-sm: 8px; --radius-md: 14px;
+        }
+        body.light-theme {
+            --bg: #f7fafc; --surface: #ffffff; --border: #e2e8f0;
+            --text-main: #1a202c; --text-muted: #718096;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); padding: 24px; display: flex; flex-direction: column; gap: 8px; }
+        .sidebar a { color: var(--text-muted); text-decoration: none; padding: 12px 16px; border-radius: var(--radius-sm); font-weight: 500; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
+        .sidebar a:hover, .sidebar a.active { background: var(--primary-soft); color: var(--primary); }
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; margin-bottom: 24px; }
+        .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; text-decoration: none; display: inline-block; }
+        .btn-danger { background: var(--danger); }
+        input, textarea, select { width: 100%; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-main); margin-bottom: 16px; }
+        .progress-bar-container { background: var(--border); border-radius: 999px; height: 12px; overflow: hidden; }
+        .progress-bar-fill { background: linear-gradient(90deg, var(--primary), #a78bfa); height: 100%; transition: 0.5s; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .badge-cup { font-size: 48px; text-align: center; margin: 16px 0; }
+        .fire-orange { color: #fd7e14; text-shadow: 0 0 10px rgba(253,126,20,0.5); }
+        .fire-red { color: #dc3545; text-shadow: 0 0 15px rgba(220,53,69,0.6); }
+        .fire-purple { color: #6f42c1; text-shadow: 0 0 20px rgba(111,66,193,0.8); }
+        .pagination-container { display: flex; gap: 8px; margin-top: 16px; }
+    </style>
+</head>
+<body class="{% if current_user.is_authenticated and current_user.dark_mode %}dark-theme{% endif %}">
+    {% if current_user.is_authenticated %}
+    <div class="sidebar">
+        <h3>Classroom</h3>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Cấp độ {{ current_user.level }} (🔥 {{ current_user.streak }} ngày)</p>
+        <a href="{{ url_for('main.dashboard') }}"><i class="fa-solid fa-chart-pie"></i> Tổng quan</a>
+        <a href="{{ url_for('main.feed') }}"><i class="fa-solid fa-newspaper"></i> Bảng tin lớp học</a>
+        <a href="{{ url_for('learning.assignments') }}"><i class="fa-solid fa-graduation-cap"></i> Góc học tập</a>
+        <a href="{{ url_for('learning.documents') }}"><i class="fa-solid fa-folder-open"></i> Kho tài liệu</a>
+        <a href="{{ url_for('admin.calendar') }}"><i class="fa-solid fa-calendar-days"></i> Lịch hoạt động</a>
+        <a href="{{ url_for('learning.discuss') }}"><i class="fa-solid fa-comments"></i> Thảo luận chung</a>
+        <a href="{{ url_for('learning.achievements') }}"><i class="fa-solid fa-trophy"></i> Bảng thành tích</a>
+        <a href="{{ url_for('main.members') }}"><i class="fa-solid fa-users"></i> Thành viên lớp</a>
+        <a href="{{ url_for('main.profile') }}"><i class="fa-solid fa-user-gear"></i> Hồ sơ của tôi</a>
+        <a href="{{ url_for('main.settings') }}"><i class="fa-solid fa-sliders"></i> Cài đặt hệ thống</a>
+        <a href="{{ url_for('auth.logout') }}" style="margin-top: auto; color: var(--danger);"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
+    </div>
+    {% endif %}
+
+    <div class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for cat, msg in messages %}
+                    <div class="card" style="border-color: var(--primary); padding: 12px; margin-bottom: 16px;">{{ msg }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

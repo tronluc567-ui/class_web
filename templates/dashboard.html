@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Trang Tổng Quan Học Tập</h2>
+<div class="grid">
+    <div class="card">
+        <h3>Tiến Độ Hoàn Thành Bài Tập</h3>
+        <p style="margin-bottom: 8px;">Đã hoàn thành {{ completed }}/{{ total }} nhiệm vụ</p>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: {{ progress_pct }}%;"></div>
+        </div>
+        <p style="margin-top: 8px; font-weight: bold; color: var(--primary);">{{ progress_pct }}%</p>
+    </div>
+    <div class="card">
+        <h3>Điểm Tích Lũy (EXP)</h3>
+        <h1 style="color: var(--success); font-size: 42px;">{{ current_user.exp }} <span style="font-size: 16px; color: var(--text-muted);">EXP</span></h1>
+        <p>Cấp độ hiện tại: <strong>Cấp {{ current_user.level }}</strong></p>
+    </div>
+</div>
+{% endblock %}

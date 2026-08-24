@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Cài Đặt Hồ Sơ Thành Viên</h2>
+<div class="card" style="max-width: 500px;">
+    <form method="POST">
+        <label>Thay đổi tên người dùng (Username)</label>
+        <input type="text" name="username" value="{{ current_user.username }}" required>
+        <button type="submit" class="btn">Cập Nhật Thông Tin</button>
+    </form>
+</div>
+
+<div class="card" style="max-width: 500px; border-color: var(--danger);">
+    <h3 style="color: var(--danger);">Vùng Xóa Tài Khoản</h3>
+    <p style="margin-bottom: 12px; font-size: 14px; color: var(--text-muted);">Để bảo vệ an toàn hệ thống, hành động xóa tài khoản yêu cầu nhập lại mật khẩu chính xác.</p>
+    <form method="POST">
+        <input type="hidden" name="delete_acc" value="true">
+        <label>Nhập mật khẩu của bạn để xác nhận</label>
+        <!-- Khắc phục lỗ hổng an toàn: Thêm trường bắt nhập password để verify trước khi hủy tài khoản -->
+        <input type="password" name="confirm_password" placeholder="Mật khẩu bảo mật cá nhân" required>
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa vĩnh viễn mọi dữ liệu học tập?')">Xác Nhận Xóa Vĩnh Viễn</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card" style="max-width: 450px; margin: 60px auto;">
+    <h2>Đăng Ký Thành Viên</h2>
+    <form method="POST">
+        <label>Tên Hiển Thị</label>
+        <input type="text" name="username" required>
+        <label>Email(Bắt buộc phải dùng đuôi @gmail.com)</label>
+        <input type="email" name="email" pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$" title="Vui lòng nhập đúng địa chỉ Gmail có đuôi @gmail.com" required>
+        <label>Mật Khẩu</label>
+        <input type="password" name="password" required>
+        <label>Vai Trò Trong Lớp</label>
+        <select name="role">
+            <option value="Student">Học Sinh (Student)</option>
+            <option value="Teacher">Giáo Viên (Teacher)</option>
+        </select>
+
+        <label>Mã xác minh Giáo viên (Nếu chọn vai trò Giáo viên)</label>
+        <input type="password" name="teacher_code" placeholder="Học sinh bỏ trống ô này">
+
+        <button type="submit" class="btn">Tạo Tài Khoản</button>
+    </form>
+    <p style="margin-top: 16px;">Đã là thành viên lớp? <a href="{{ url_for('auth.login') }}" style="color: var(--primary);">Đăng nhập</a></p>
+</div>
+{% endblock %}
